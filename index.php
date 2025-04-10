@@ -1,114 +1,3 @@
-<!-- Bagian yang dihapus: <div class="log-icon">... -->
-<!-- Tombol Log(x) juga dihapus -->
-<!-- Fungsi hitungLog() dihapus -->
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="img/icon.png" type="image/png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APLIKASI KALKULATOR</title>
-    <style>
-        /* ... (gaya tetap sama, hanya bagian log-icon yang dihapus) ... */
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(rgba(18, 18, 18, 0.8), rgba(58, 58, 82, 0.8)), 
-                url('img/bg.jpg') no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-        }
-        .kalkulator {
-            width: 350px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 25px;
-            border-radius: 15px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: 0.3s ease-in-out;
-            position: relative;
-        }
-        .kalkulator:hover {
-            transform: scale(1.02);
-            box-shadow: 0px 6px 25px rgba(255, 255, 255, 0.2);
-        }
-        h2 {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 22px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .input-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .input-field, .select-field {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            background: rgb(255, 254, 254);
-            color: rgb(0, 0, 0);
-            text-align: center;
-            outline: none;
-            transition: all 0.3s ease-in-out;
-        }
-        .input-field:focus, .select-field:hover {
-            border-color: #00ff99;
-            box-shadow: 0px 0px 10px rgba(0, 255, 153, 0.5);
-        }
-        .button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            background: linear-gradient(90deg, #00ff99, #00cc77);
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0px 4px 10px rgba(0, 255, 153, 0.3);
-        }
-        .button:hover {
-            background: linear-gradient(90deg, #00cc77, #009955);
-            transform: scale(1.05);
-            box-shadow: 0px 6px 15px rgba(0, 255, 153, 0.5);
-        }
-        .hasil {
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-        .select-field option[value="+"] { color: green; }
-        .select-field option[value="-"] { color: red; }
-        .select-field option[value="*"] { color: blue; }
-        .select-field option[value="/"] { color: orange; }
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #print-area, #print-area * {
-                visibility: visible;
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 24px;
-                text-align: center;
-            }
-        }
         <!-- Struktur dasar HTML -->
 <!DOCTYPE html>
 <html lang="id">
@@ -201,20 +90,40 @@
         }
 
         /* Saat cetak, hanya tampilkan hasil */
-        @media print {
+                @media print {
             body * {
                 visibility: hidden;
             }
-            #print-area, #print-area * {
+
+            #print-area {
                 visibility: visible;
                 position: absolute;
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
-                font-size: 24px;
+                font-size: 16px;
+                width: 90%;
+                max-width: 500px;
+                padding: 30px;
+                background: white;
+                border: 2px solid #000;
+                border-radius: 8px;
                 text-align: center;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+
+            #print-area h3 {
+                margin-bottom: 20px;
+                font-size: 20px;
+                text-transform: uppercase;
+            }
+
+            #print-area p {
+                font-size: 16px;
+                margin: 10px 0;
             }
         }
+
     </style>
 </head>
 
@@ -282,7 +191,11 @@
                 default: hasil = "Operator tidak valid";
             }
 
-            let tampilanHasil = `${angka1} ${operator} ${angka2} = ${hasil}`;
+                let tampilanHasil = `
+        <h4>Hasil :</h4>
+        <p>${angka1} ${operator} ${angka2} = ${hasil}</p> `;
+
+
             document.getElementById("hasil").innerHTML = tampilanHasil;
             document.getElementById("print-area").innerHTML = tampilanHasil;
             document.getElementById("print-area").style.display = "none";
@@ -311,12 +224,45 @@
 
         // Fungsi untuk membuat file PDF dari hasil
         async function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            let content = document.getElementById("print-area").innerText;
-            doc.text(content, 10, 10);
-            doc.save("hasil-perhitungan.pdf");
-        }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let angka1 = document.getElementById("angka1").value;
+    let angka2 = document.getElementById("angka2").value;
+    let operator = document.getElementById("operator").value;
+
+    let hasil;
+    switch (operator) {
+        case "+": hasil = parseFloat(angka1) + parseFloat(angka2); break;
+        case "-": hasil = parseFloat(angka1) - parseFloat(angka2); break;
+        case "*": hasil = parseFloat(angka1) * parseFloat(angka2); break;
+        case "/": hasil = angka2 != 0 ? (parseFloat(angka1) / parseFloat(angka2)).toFixed(2) : "Tidak bisa dibagi 0"; break;
+        default: hasil = "Operator tidak valid";
+    }
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("Aplikasi Kalkulator", 105, 20, null, null, "center");
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 20, 35);
+    doc.line(20, 38, 190, 38);
+
+    doc.text(`Angka 1     : ${angka1}`, 20, 50);
+    doc.text(`Operator    : ${operator}`, 20, 60);
+    doc.text(`Angka 2     : ${angka2}`, 20, 70);
+    doc.text(`Hasil       : ${hasil}`, 20, 80);
+
+    doc.line(20, 85, 190, 85);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text("Dicetak menggunakan Aplikasi Kalkulator", 105, 95, null, null, "center");
+
+    doc.save("hasil-perhitungan.pdf");
+}
+
     </script>
 </body>
 </html>
