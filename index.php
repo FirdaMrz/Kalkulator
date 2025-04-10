@@ -88,6 +88,26 @@
             font-weight: bold;
             margin-top: 15px;
         }
+        /* Efek hover & focus pada input dan select */
+        .input-field:hover,
+        .select-field:hover,
+        .input-field:focus,
+        .select-field:focus {
+            box-shadow: 0 0 8px rgba(0, 255, 153, 0.5);
+            border: 1px solid #00cc77;
+        }
+
+        /* Efek hover dan aktif pada tombol */
+        .button:hover {
+            background: linear-gradient(90deg, #00cc77, #009955);
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(0, 255, 153, 0.3);
+        }
+
+        .button:active {
+            transform: scale(0.97);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
         /* Saat cetak, hanya tampilkan hasil */
                 @media print {
@@ -169,48 +189,71 @@
 
     <!-- Logika JavaScript -->
     <script>
-        // Fungsi utama untuk menghitung
+      // Fungsi utama untuk menghitung
         function hitung() {
+            // Ambil nilai dari input dengan id "angka1", ubah ke float (bilangan desimal)
             let angka1 = parseFloat(document.getElementById("angka1").value);
+            // Ambil nilai dari input dengan id "angka2", ubah ke float juga
             let angka2 = parseFloat(document.getElementById("angka2").value);
+            // Ambil nilai operator (misalnya: +, -, *, /) dari select input
             let operator = document.getElementById("operator").value;
-            let hasil;
+            let hasil; // Variabel untuk menyimpan hasil perhitungan
 
+            // Cek apakah input bukan angka (NaN = Not a Number)
             if (isNaN(angka1) || isNaN(angka2)) {
-                hasil = "Masukkan angka dengan benar!";
+                hasil = "Masukkan angka dengan benar!"; // Pesan error
+                // Tampilkan pesan error ke elemen dengan id "hasil"
                 document.getElementById("hasil").innerHTML = hasil;
+                // Juga tampilkan ke elemen dengan id "print-area"
                 document.getElementById("print-area").innerHTML = hasil;
-                return;
+                return; // Hentikan proses jika input tidak valid
             }
 
+            // Lakukan operasi matematika berdasarkan nilai operator
             switch (operator) {
-                case "+": hasil = angka1 + angka2; break;
-                case "-": hasil = angka1 - angka2; break;
-                case "*": hasil = angka1 * angka2; break;
-                case "/": hasil = angka2 !== 0 ? angka1 / angka2 : "Tidak bisa dibagi 0"; break;
-                default: hasil = "Operator tidak valid";
+                case "+": // Jika operator +
+                    hasil = angka1 + angka2;
+                    break;
+                case "-": // Jika operator -
+                    hasil = angka1 - angka2;
+                    break;
+                case "*": // Jika operator *
+                    hasil = angka1 * angka2;
+                    break;
+                case "/": // Jika operator /
+                    hasil = angka2 !== 0 ? angka1 / angka2 : "Tidak bisa dibagi 0"; // Cegah pembagian dengan nol
+                    break;
+                default:
+                    hasil = "Operator tidak valid"; // Jika operator bukan dari yang diharapkan
             }
 
-                let tampilanHasil = `
-        <h4>Hasil :</h4>
-        <p>${angka1} ${operator} ${angka2} = ${hasil}</p> `;
+            // Buat tampilan hasil dalam format HTML
+            let tampilanHasil = `
+                <h4>Hasil :</h4>
+                <p>${angka1} ${operator} ${angka2} = ${hasil}</p> 
+            `;
 
-
+            // Tampilkan hasil di elemen dengan id "hasil"
             document.getElementById("hasil").innerHTML = tampilanHasil;
+            // Juga tampilkan hasil di elemen dengan id "print-area"
             document.getElementById("print-area").innerHTML = tampilanHasil;
+            // Sembunyikan elemen print-area (mungkin hanya ditampilkan saat print nanti)
             document.getElementById("print-area").style.display = "none";
+            // Fokuskan kembali ke input angka1 agar pengguna bisa langsung isi ulang
             document.getElementById("angka1").focus();
 
-            // Kirim data ke database via PHP
-                        fetch("simpan.php", {
-                method: "POST",
+            // Kirim data hasil perhitungan ke server menggunakan fetch (AJAX)
+            fetch("simpan.php", {
+                method: "POST", // Kirim data dengan metode POST
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "application/x-www-form-urlencoded" // Format data yang dikirim
                 },
+                // Encode data agar aman dikirim via URL dan sesuai format x-www-form-urlencoded
                 body: `angka1=${encodeURIComponent(angka1)}&angka2=${encodeURIComponent(angka2)}&operator=${encodeURIComponent(operator)}&hasil=${encodeURIComponent(hasil)}`
             });
 
         }
+
 
         // Fungsi untuk memanggil cetak hasil
         function printHasil() {
@@ -222,47 +265,86 @@
             }
         }
 
-        // Fungsi untuk membuat file PDF dari hasil
-        async function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+       // Fungsi untuk membuat file PDF dari hasil
+            async function downloadPDF() {
+                // Mengambil object jsPDF dari library jspdf (pastikan sudah include di HTML kamu)
+                const { jsPDF } = window.jspdf;
+                // Membuat dokumen PDF baru
+                const doc = new jsPDF();
 
-    let angka1 = document.getElementById("angka1").value;
-    let angka2 = document.getElementById("angka2").value;
-    let operator = document.getElementById("operator").value;
+                // Ambil nilai dari input angka1, angka2, dan operator
+                let angka1 = document.getElementById("angka1").value;
+                let angka2 = document.getElementById("angka2").value;
+                let operator = document.getElementById("operator").value;
 
-    let hasil;
-    switch (operator) {
-        case "+": hasil = parseFloat(angka1) + parseFloat(angka2); break;
-        case "-": hasil = parseFloat(angka1) - parseFloat(angka2); break;
-        case "*": hasil = parseFloat(angka1) * parseFloat(angka2); break;
-        case "/": hasil = angka2 != 0 ? (parseFloat(angka1) / parseFloat(angka2)).toFixed(2) : "Tidak bisa dibagi 0"; break;
-        default: hasil = "Operator tidak valid";
-    }
+                let hasil; // Variabel untuk menyimpan hasil perhitungan
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text("Aplikasi Kalkulator", 105, 20, null, null, "center");
+                // Lakukan perhitungan sesuai operator yang dipilih
+                switch (operator) {
+                    case "+": 
+                        hasil = parseFloat(angka1) + parseFloat(angka2);
+                        break;
+                    case "-": 
+                        hasil = parseFloat(angka1) - parseFloat(angka2);
+                        break;
+                    case "*": 
+                        hasil = parseFloat(angka1) * parseFloat(angka2);
+                        break;
+                    case "/": 
+                        hasil = angka2 != 0 
+                            ? (parseFloat(angka1) / parseFloat(angka2)).toFixed(2) // Pembulatan 2 angka di belakang koma
+                            : "Tidak bisa dibagi 0"; // Cegah pembagian nol
+                        break;
+                    default: 
+                        hasil = "Operator tidak valid";
+                }
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 20, 35);
-    doc.line(20, 38, 190, 38);
+                // Ganti font menjadi Helvetica dan tebal (bold)
+                doc.setFont("helvetica", "bold");
+                // Set ukuran font menjadi 18
+                doc.setFontSize(18);
+                // Tambahkan judul di tengah halaman
+                doc.text("Aplikasi Kalkulator", 105, 20, null, null, "center");
 
-    doc.text(`Angka 1     : ${angka1}`, 20, 50);
-    doc.text(`Operator    : ${operator}`, 20, 60);
-    doc.text(`Angka 2     : ${angka2}`, 20, 70);
-    doc.text(`Hasil       : ${hasil}`, 20, 80);
+                // Ganti font ke normal dan ukuran font ke 12
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(12);
+                // Tambahkan tanggal cetak dengan format lokal Indonesia
+                doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 20, 35);
+                // Tambahkan garis horizontal sebagai pemisah
+                doc.line(20, 38, 190, 38);
 
-    doc.line(20, 85, 190, 85);
+                // Tampilkan data input dan hasilnya ke dalam PDF
+                doc.text(`Angka 1     : ${angka1}`, 20, 50);
+                doc.text(`Operator    : ${operator}`, 20, 60);
+                doc.text(`Angka 2     : ${angka2}`, 20, 70);
+                doc.text(`Hasil       : ${hasil}`, 20, 80);
 
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    doc.text("Dicetak menggunakan Aplikasi Kalkulator", 105, 95, null, null, "center");
+                // Tambahkan garis penutup
+                doc.line(20, 85, 190, 85);
 
-    doc.save("hasil-perhitungan.pdf");
-}
+                // Tambahkan catatan kecil di bawah (footer)
+                doc.setFontSize(10); // Ukuran font kecil
+                doc.setTextColor(100); // Warna teks abu-abu
+                doc.text("Dicetak menggunakan Aplikasi Kalkulator", 105, 95, null, null, "center");
+
+                // Simpan dan unduh file PDF dengan nama "hasil-perhitungan.pdf"
+                doc.save("hasil-perhitungan.pdf");
+            }
 
     </script>
+
+<body>
+  <div class="kalkulator-box">
+    <!-- isi kalkulator kamu di sini -->
+  </div>
+
+  <!-- Footer -->
+  <<footer style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: #ccc; font-size: 14px;">
+  © 2025 Aplikasi Kalkulator | Dibuat oleh <strong>Firda Mareza</strong>
+</footer>
+
+</body>
+
 </body>
 </html>
