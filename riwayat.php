@@ -1,7 +1,18 @@
-
 <?php
 include 'koneksi.php';
 
+// Hapus semua data jika tombol hapus semua diklik
+if (isset($_POST['hapus'])) {
+    $conn->query("DELETE FROM riwayat");
+}
+
+// Hapus data berdasarkan ID
+if (isset($_GET['hapus_id'])) {
+    $id = intval($_GET['hapus_id']);
+    $conn->query("DELETE FROM riwayat WHERE id = $id");
+}
+
+// Ambil semua data riwayat
 $result = $conn->query("SELECT * FROM riwayat ORDER BY waktu ASC");
 ?>
 
@@ -20,11 +31,11 @@ $result = $conn->query("SELECT * FROM riwayat ORDER BY waktu ASC");
             text-align: center;
         }
         table {
-            width: 90%;
+            width: 95%;
             margin: auto;
             border-collapse: collapse;
             background: #fff;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         th, td {
             padding: 12px;
@@ -45,10 +56,28 @@ $result = $conn->query("SELECT * FROM riwayat ORDER BY waktu ASC");
             text-decoration: none;
             color: #00cc77;
         }
+        .hapus-btn, .hapus-baris {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .hapus-btn {
+            margin: 20px auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
     <h2>Riwayat Perhitungan</h2>
+
+    <!-- Tombol hapus semua -->
+    <form method="POST" onsubmit="return confirm('Yakin ingin menghapus semua riwayat?')">
+        <button type="submit" name="hapus" class="hapus-btn">Hapus Semua Riwayat</button>
+    </form>
+
     <table>
         <tr>
             <th>No</th>
@@ -57,6 +86,7 @@ $result = $conn->query("SELECT * FROM riwayat ORDER BY waktu ASC");
             <th>Angka 2</th>
             <th>Hasil</th>
             <th>Waktu</th>
+            <th>Aksi</th>
         </tr>
         <?php
         $no = 1;
@@ -68,6 +98,11 @@ $result = $conn->query("SELECT * FROM riwayat ORDER BY waktu ASC");
                 <td>{$row['angka2']}</td>
                 <td>{$row['hasil']}</td>
                 <td>{$row['waktu']}</td>
+                <td>
+                    <a href='riwayat.php?hapus_id={$row['id']}' onclick=\"return confirm('Yakin ingin hapus riwayat ini?')\">
+                        <button class='hapus-baris'>Hapus</button>
+                    </a>
+                </td>
             </tr>";
             $no++;
         }
