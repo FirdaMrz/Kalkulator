@@ -300,25 +300,57 @@
                 }
 
                 // Ganti font menjadi Helvetica dan tebal (bold)
-                doc.setFont("helvetica", "bold");
+                doc.setFont("OpenSans", "bold");
                 // Set ukuran font menjadi 18
                 doc.setFontSize(18);
                 // Tambahkan judul di tengah halaman
-                doc.text("Aplikasi Kalkulator", 105, 20, null, null, "center");
+                doc.text("Hasil Perhitungan", 105, 20, null, null, "center");
 
-                // Ganti font ke normal dan ukuran font ke 12
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(12);
-                // Tambahkan tanggal cetak dengan format lokal Indonesia
-                doc.text(`Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`, 20, 35);
-                // Tambahkan garis horizontal sebagai pemisah
-                doc.line(20, 38, 190, 38);
+                // Atur font untuk tanggal cetak ke Open Sans, ukuran kecil
+                doc.setFont("OpenSans", "bold");
 
-                // Tampilkan data input dan hasilnya ke dalam PDF
-                doc.text(`Angka 1     : ${angka1}`, 20, 50);
-                doc.text(`Operator    : ${operator}`, 20, 60);
-                doc.text(`Angka 2     : ${angka2}`, 20, 70);
-                doc.text(`Hasil       : ${hasil}`, 20, 80);
+                doc.setFontSize(9);
+
+            // Ambil teks tanggal
+            const tanggalCetak = `Tanggal Cetak: ${new Date().toLocaleString('id-ID')}`;
+
+            // Hitung panjang teks untuk posisi kanan (kurang lebih)
+            const textWidth = doc.getTextWidth(tanggalCetak);
+
+            // Posisi kanan (A4 lebar 210mm - margin 20)
+            const xPos = 190 - textWidth;
+
+            // Tampilkan tanggal cetak di kanan atas
+            // Teks tanggal cetak - warna biru
+            doc.setTextColor(0, 0, 255); // biru
+            doc.text(tanggalCetak, xPos, 35);
+            doc.setTextColor(0, 0, 0); // kembali ke hitam
+
+            // Garis pemisah tetap seperti biasa
+            doc.line(20, 38, 190, 38);
+
+            // Kembalikan font dan ukuran ke default untuk isi konten
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+
+            // Konten utama PDF
+            doc.text("Angka 1", 20, 50);
+            doc.text(`: ${angka1}`, 60, 50);
+
+            doc.text("Operator", 20, 60);
+            doc.text(`: ${operator}`, 60, 60);
+
+            doc.text("Angka 2", 20, 70);
+            doc.text(`: ${angka2}`, 60, 70);
+
+            // Ubah warna teks jadi merah
+            doc.setTextColor(255, 0, 0);
+            doc.text("Hasil", 20, 80);
+            doc.text(`: ${hasil}`, 60, 80);
+
+            // Balikin ke hitam lagi biar yang bawah gak ikut merah
+            doc.setTextColor(0, 0, 0);
+
 
                 // Tambahkan garis penutup
                 doc.line(20, 85, 190, 85);

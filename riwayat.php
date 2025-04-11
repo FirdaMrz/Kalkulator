@@ -28,7 +28,7 @@
     }
 
         th, td {
-            padding: 2px 4px; /* Jarak isi sel dari pinggirannya (lebih sempit dari sebelumnya) */
+            padding: 1px 2px; /* Jarak isi sel dari pinggirannya (lebih sempit dari sebelumnya) */
             border: 1px solid #ccc; /* Garis abu terang antar sel */
             text-align: center; /* Teks di tengah secara horizontal */
             vertical-align: middle; /* Teks di tengah secara vertikal */
