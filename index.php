@@ -279,25 +279,34 @@
 
                 let hasil; // Variabel untuk menyimpan hasil perhitungan
 
-                // Lakukan perhitungan sesuai operator yang dipilih
-                switch (operator) {
-                    case "+": 
-                        hasil = parseFloat(angka1) + parseFloat(angka2);
-                        break;
-                    case "-": 
-                        hasil = parseFloat(angka1) - parseFloat(angka2);
-                        break;
-                    case "*": 
-                        hasil = parseFloat(angka1) * parseFloat(angka2);
-                        break;
-                    case "/": 
-                        hasil = angka2 != 0 
-                            ? (parseFloat(angka1) / parseFloat(angka2)).toFixed(2) // Pembulatan 2 angka di belakang koma
-                            : "Tidak bisa dibagi 0"; // Cegah pembagian nol
-                        break;
-                    default: 
-                        hasil = "Operator tidak valid";
-                }
+               // Lakukan perhitungan sesuai operator yang dipilih
+            switch (operator) {
+                case "+": 
+                    // Jika operator adalah penjumlahan, tambahkan angka1 dan angka2 setelah dikonversi ke float
+                    hasil = parseFloat(angka1) + parseFloat(angka2);
+                    break;
+
+                case "-": 
+                    // Jika operator adalah pengurangan, kurangkan angka2 dari angka1 setelah dikonversi ke float
+                    hasil = parseFloat(angka1) - parseFloat(angka2);
+                    break;
+
+                case "*": 
+                    // Jika operator adalah perkalian, kalikan angka1 dan angka2 setelah dikonversi ke float
+                    hasil = parseFloat(angka1) * parseFloat(angka2);
+                    break;
+
+                case "/": 
+                    // Jika operator adalah pembagian, periksa apakah angka2 bukan nol
+                    hasil = angka2 != 0 
+                        ? (parseFloat(angka1) / parseFloat(angka2)).toFixed(2) // Jika bukan nol, bagi angka1 dengan angka2 dan bulatkan hasilnya 2 angka di belakang koma
+                        : "Tidak bisa dibagi 0"; // Jika nol, tampilkan pesan error
+                    break;
+
+                default: 
+                    // Jika operator tidak sesuai dengan yang dikenali, tampilkan pesan error
+                    hasil = "Operator tidak valid";
+            }
 
                 // Ganti font menjadi Helvetica dan tebal (bold)
                 doc.setFont("OpenSans", "bold");
